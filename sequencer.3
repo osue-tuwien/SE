@@ -1,0 +1,162 @@
+.\"*****************************************************************************
+.\"                                                                            *
+.\"   Author:      G. Leber                                                    *
+.\"                Technische Universitaet Wien                                *
+.\"                Institut fuer Technische Informatik E182/1                  *
+.\"                Treitlstrasse 3                                             *
+.\"                1040 Wien                                                   *
+.\"                Tel.: (0222) 58801 / 8176                                   *
+.\"                E-Mail: guenther@vmars.tuwien.ac.at                         *
+.\"   Modified By: A. Vrchoticky
+.\"   File:        sequencer.3						       *
+.\"   Version:     4.14							       *
+.\"   Date:        2/14/95						       *
+.\"                                                                            *
+.\"****************************************************************************/
+.TH SEQUENCER 3 "RELEASE 4.14"
+.SH NAME
+create_sequencer, sticket, rm_sequencer \- sequencer synchronization primitive 
+.SH SYNTAX
+.nf
+.B #include <seqev.h>
+.LP
+.B sequencer_t *create_sequencer (key_t key)
+.LP
+.B long sticket(sequencer_t *sequencer)
+.B int rm_sequencer(sequencer_t *sequencer)
+.fi
+.SH DESCRIPTION
+.B create_sequencer
+creates and initializes a sequencer with the specified key.  On success it
+returns a pointer to a newly allocated sequencer. On failure, NULL is returned
+and the value of 
+.I errno
+is set to an appropriate value to indicate the error.  In case the
+sequencer already exists a valid pointer is returned, but no further
+initialisation will be done.
+.LP
+.B sticket
+returns the number of previous \fBsticket\fR calls with the given parameter.
+.LP
+.B rm_sequencer
+removes the specified sequencer.
+.SH DIAGNOSTICS
+.B create_sequencer
+returns NULL in case of an error, whereas
+.B rm_sequencer
+and
+.B sticket
+return -1 if an error has occurred.
+In case of an error all functions set 
+.I errno
+to an appropriate value. The following values of
+.I errno
+can be set by any of those functions:
+.TP 15
+[EINVAL]
+The sequencer does not have a valid sequencer ID.
+.TP 15
+[EACCES]
+The calling process does not have the required permission.
+.LP
+.B create_sequencer
+can set
+.I errno
+to one of the following values:
+.TP 15
+[ENOSPC]
+An attempt to create a new sequencer ID exceeded the system-wide limit on
+the size of the according table.
+.TP 15
+[EPERM]
+The calling process does not have the required effective user ID.
+.TP 15
+[EFAULT]
+An error occured during initializing the sequencer.
+.TP 15
+[ENOMEM]
+The system does not have enough memory to complete the function.
+.TP 15
+[EEXIST]
+An sequencer ID already exists for the key parameter.
+.TP 15
+[EMFILE]
+An attempt to attach the sequencer's shared memory region exceeded the maximum
+number of attached regions allowed for any one process.
+.TP 15
+[ENOSYS]
+The requested operation is not supported by this implementation.
+.TP 15
+[EINTR]
+The function was interrupted by a signal.
+.TP 15
+[EIDRM]
+The sequencer was removed from the system.
+.LP
+.B sticket
+can set
+.I errno
+to the following values:
+.TP 15
+[EINTR]
+The function was interrupted by a signal.
+.TP 15
+[ENOSYS]
+The requested operation is not supported by this implementation.
+.TP 15
+[EIDRM]
+The sequencer was removed from the system.
+.TP 15
+[ERANGE]
+An overflow of the sequencer occured.
+.TP 15
+[ENOSPC]
+The system-defined limit on the number of processes using this call was
+exceeded.
+.LP
+.B rm_sequencer
+can set
+.I errno
+to the following values:
+.TP 15
+[EPERM]
+The calling process does not have the required effective user ID.
+.TP 15
+[ENOMEM]
+The system does not have enough memory to complete the function.
+.SH COMPILING
+Compiling has to be done with \fI-lseqev\fR e.g.
+.LP
+c89 program.c
+.I -lsequev
+.SH RESTRICTIONS
+Since this implementation uses shared memory and semaphores, the existence of
+shared memory or semaphores with the same key leads to undefined behavior.
+Sequencers and Eventcounters with the \fIsame\fR key cannot be used at the
+same time.
+.LP
+Sequencers are \fInot\fR removed automatically when the corresponding
+processes die.  Therefore Sequencers must be deleted by the last process that
+references them before terminating.  In case of unintended termination of
+the program use
+.I ipcs
+to find and
+.I ipcrm
+to delete the used semaphores and shared memory segments.
+.SH ENVIRONMENT
+The environment variable DEBUGSEQUENCER may be used to define the
+current debuglevel.  Currently there are two bits used, bit 0 for some
+debugging output in case of encountered errors, bit 1 for causing a core
+dump in case of an error.  If DEBUGSEQUENCER is defined, but contains no
+value the default debuglevel 1 (bit 0 set) is used.  You may use several
+debug levels simultaneously by setting the apropriate bits in the the value
+assigned to DEBUGSEQUENCER.
+.SH AUTHOR
+Guenther Leber (guenther@vmars.tuwien.ac.at)
+.br
+modified by Alexander Vrchoticky (alex@vmars.tuwien.ac.at)
+.LP
+Many thanks to Peter P. Puschner and Ralph Zainlinger, who tested the
+implementation.
+.SH SEE ALSO
+Sequencer(3), eventcounter(3), Eventcounter(3), ipcs(1), ipcrm(1)

@@ -1,0 +1,81 @@
+.\"*****************************************************************************
+.\"                                                                            *
+.\"   Author:      G. Leber                                                    *
+.\"                Technische Universitaet Wien                                *
+.\"                Institut fuer Technische Informatik E182/1                  *
+.\"                Treitlstrasse 3                                             *
+.\"                1040 Wien                                                   *
+.\"                Tel.: (0222) 58801 / 8176                                   *
+.\"                E-Mail: guenther@vmars.tuwien.ac.at                         *
+.\"   File:        Sequencer.3						       *
+.\"   Version:     4.12							       *
+.\"   Date:        9/7/94						       *
+.\"                                                                            *
+.\"****************************************************************************/
+.TH SEQUENCER 3 "RELEASE 4.12"
+.SH NAME
+Sequencer \- synchronization mechanism using a ticket machine
+.SH SYNTAX
+.nf
+.B #include <sys/types>
+.B #include <sequencer.h>
+.LP
+.B int initSequencer(key_t key, Sequencer_t *Sequencer)
+.sp 2
+.B #include <sequencer.h>
+.LP
+.B long Sticket(Sequencer_t *Sequencer)
+.B int rmSequencer(Sequencer_t *Sequencer)
+.fi
+.SH DESCRIPTION
+.I InitSequencer
+creates and initializes a sequencer with the specified key.  On success it
+returns 0 and a descriptor for the sequencer with the specified key.  If the
+sequencer already exists a valid descriptor will be returned, but no
+further initialization will be done.
+.LP
+.I Sticket
+returns the number of previous \fISticket\fR calls to the sequencer with
+the given descriptor.
+.LP
+.I RmSequencer
+removes the specified sequencer.
+.SH DIAGNOSTICS
+All functions return -1 in case of error.
+.LP
+On overflow, which occurrs after MAX_LONG \fISticket\fR calls,
+\fISticket\fR returns -1 and sets errno to ERANGE.
+.SH COMPILING
+Compiling has to be done with \fI-lseqev\fR, e.g.
+.LP
+c89 program.c
+.B -lsequev
+.SH RESTRICTIONS
+Since this implementation uses shared memory and semaphores, the existence of
+shared memory or semaphores with the same key leads to undefined behavior.
+Sequencers and Eventcounters with the \fIsame\fR key cannot be used at the
+same time.
+.LP
+Sequencers are \fInot\fR removed automatically when the processes, which
+use the sequencer, die.  Therefore sequencers must be deleted by the last
+process that references them, before terminating.  In case of unintended
+termination of the program use
+.I ipcs
+to find and
+.I ipcrm
+to delete the used semaphores and shared memory segments.
+.SH ENVIRONMENT
+The environment variable DEBUGSEQUENCER may be used to define the
+current debuglevel.  Currently there are two bits used, bit 0 for some
+debugging output in case of encountered errors, bit 1 for causing a core
+dump in case of an error.  If DEBUGSEQUENCER is defined, but contains no
+value the default debuglevel 1 (bit 0 set) is used.  You may use several
+debug levels simultaneously by setting the apropriate bits in the the value
+assigned to DEBUGSEQUENCER.
+.SH AUTHOR
+Guenther Leber (guenther@vmars.tuwien.ac.at)
+.LP
+Many thanks to Peter P. Puschner and Ralph Zainlinger, who tested the
+implementation.
+.SH SEE ALSO
+sequencer(3), Eventcounter(3), eventcounter(3), ipcs(1), ipcrm(1)

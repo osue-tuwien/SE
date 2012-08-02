@@ -1,0 +1,95 @@
+.\" Version 4.12, Date: 9/7/94, File: Eventcounter.3
+.TH EVENTCOUNTER 3 "RELEASE 4.12"
+.SH NAME
+initEventcounter, Eawait, Eread, Eadvance \- Eventcounter operations
+.SH SYNTAX
+.nf
+.B #include <sys/types.h>
+.B #include <eventcounter.h>
+.LP
+.B int initEventcounter (key_t key, Eventcounter_t *Eventcounter)
+.sp 2
+.B #include <eventcounter.h>
+.LP
+.B int Eawait (Eventcounter_t Eventcounter, long value)
+.B long Eread (Eventcounter_t Eventcounter)
+.B int Eadvance (Eventcounter_t Eventcounter)
+.B int rmEventcounter (Eventcounter_t Eventcounter)
+.fi
+.SH DESCRIPTION
+These functions implement event counters. Each process that wants to
+use an event counter has to initialize it using
+.I initEventcounter.
+On success this function returns 0 and a valid 
+descriptor for the sequencer with the specified key.  If an event counter
+already exists, a valid descriptor is returned, but no further
+initialization will be done.
+.LP
+.I Eawait 
+waits until the event counter becomes equal to or grater than
+.I Value,
+.LP
+.I Eread
+returns the current value of the event counter, 
+.LP
+.I Eadvance
+increments the event counter
+by one, and
+.LP
+.I rmEventcounter
+removes the event counter.
+.SH DIAGNOSTICS
+All functions return -1 in case of error.
+.PP
+On overflow, which occurrs after MAX_LONG advances, \fIEadvance\fR will
+return -1 and errno will be set to ERANGE.
+.SH COMPILING
+You have to specify the library to the compiler, e.g.
+.LP
+c89 program.c 
+.B -lseqev
+.SH RESTRICTIONS
+.PP
+Since event counters are implemented with semaphores and shared memory,
+they will interfere with semaphores and shared memory of the same key,
+leading to undefined behaviour.  Also, sequencers with the same key
+cannot be used at the same time.
+.LP
+The number of processes, which can do an
+.I Eawait
+on the same event counter simultaneously, is limited by
+.I SEMMSL
+(defined in /usr/include/sys/sem.h).  In case additional processes want to
+do an
+.I Eawait
+on the specified eventcounter, -1 will be returned and errno will be set to
+EAGAIN.
+.PP
+Event counters (like semaphores and shared memory) are not deleted when
+the last process that references them terminates. Therefore the last
+process has to call \fIrmEventcounter\fR before terminating.  On unintended
+termination of a program using sequencers, use
+.I ipcs
+to find the corresponding semaphores and shared memory segments and use
+.I ipcrm
+to delete them.
+.SH ENVIRONMENT
+The environment variable DEBUGEVENTCOUNTER may be used to define the
+current debuglevel.  Currently there are two bits used, bit 0 for some
+debugging output in case of encountered errors, bit 1 for causing a core
+dump in case of an error.  If DEBUGEVENTCOUNTER is defined, but contains no
+value the default debuglevel 1 (bit 0 set) is used.  You may use several
+debug levels simultaneously by setting the apropriate bits in the the value
+assigned to DEBUGEVENTCOUNTER.
+.SH SEE ALSO
+eventcounter(3), Sequencer(3), sequencer(3), ipcs(1), ipcrm(1)
+.SH AUTHORS
+.IP Implementation:
+Guenther Leber (guenther@vmars.tuwien.ac.at)
+.IP "Manual page:"
+Peter Holzer (hp@vmars.tuwien.ac.at) and
+.br
+Guenther Leber (guenther@vmars.tuwien.ac.at)
+.LP
+Many thanks to Peter P. Puschner and Ralph Zainlinger, who tested the
+implementation.

@@ -1,0 +1,23 @@
+foreach(page IN ITEMS initSequencer rmSequencer Sticket)
+   execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink 
+   ${CMAKE_INSTALL_PREFIX}/share/man/man3/Sequencer.3 
+   ${CMAKE_INSTALL_PREFIX}/share/man/man3/${page}.3)
+endforeach(page)
+
+foreach(page IN ITEMS create_sequencer rm_sequencer sticket)
+   execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink 
+   ${CMAKE_INSTALL_PREFIX}/share/man/man3/sequencer.3 
+   ${CMAKE_INSTALL_PREFIX}/share/man/man3/${page}.3)
+endforeach(page)
+
+foreach(page IN ITEMS initEventcounter rmEventcounter Eawait Eread Eadvance)
+   execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink 
+   ${CMAKE_INSTALL_PREFIX}/share/man/man3/Eventcounter.3 
+   ${CMAKE_INSTALL_PREFIX}/share/man/man3/${page}.3)
+endforeach(page)
+
+foreach(page IN ITEMS create_eventcounter rm_eventcounter eawait eread eadvance)
+   execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink 
+   ${CMAKE_INSTALL_PREFIX}/share/man/man3/eventcounter.3 
+   ${CMAKE_INSTALL_PREFIX}/share/man/man3/${page}.3)
+endforeach(page)

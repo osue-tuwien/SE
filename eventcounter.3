@@ -1,0 +1,222 @@
+.\" Version 4.14, Date: 2/14/95, File: eventcounter.3
+.TH EVENTCOUNTER 3 "RELEASE 4.14"
+.SH NAME
+create_eventcounter, eawait, eread, eadvance, rm_eventcounter \- eventcounter operations
+.SH SYNTAX
+.nf
+.B #include <seqev.h>
+.LP
+.B eventcounter_t *create_eventcounter (key_t key)
+.LP
+.B int eawait (eventcounter_t *eventcounter, long value);
+.B long eread (eventcounter_t *eventcounter)
+.B int eadvance (eventcounter_t *eventcounter)
+.B int rm_eventcounter (eventcounter_t *eventcounter)
+.fi
+.SH DESCRIPTION
+.B create_eventcounter
+creates and initializes an eventcounter with the specified key. On success
+it returns a pointer to a newly allocated event counter. On failure, NULL is
+returned, and the value of 
+.I errno
+is set to an appropriate value to indicate the error.  In case the
+event counter already exists a valid pointer is returned, but no further
+initialization is done.
+.LP
+.B eawait 
+blocks until the event counter becomes equal to or greater than the given
+.I value.
+.LP
+.B eread
+returns the current value of the event counter.
+.LP
+.B eadvance
+increments the event counter by one, possibly allowing processes waiting
+on the eventcounter to continue.  In case
+.B eadvance
+causes an overflow of the event counter -1 will be returned and errno will
+be set to ERANGE.
+.LP
+.B rm_eventcounter
+removes the specified event counter.
+.SH DIAGNOSTICS
+In case of failure,
+.B create_eventcounter
+returns NULL and all other functions return -1. All functions can set 
+.I errno
+to one of the following values before returning an error code.
+.TP 15
+[EINVAL]
+The event counter does not have a valid event counter ID.
+.TP 15
+[EACCES]
+The calling process does not have the required permission.
+.LP
+.B create_eventcounter
+can set
+.I errno
+to the following values:
+.TP 15
+[ENOSPC]
+An attempt to create a new event counter ID exceeded the system-wide limit on
+the size of the according table.
+.TP 15
+[EPERM]
+The calling process does not have the required effective user ID.
+.TP 15
+[EFAULT]
+An error occured during initializing the event counter.
+.TP 15
+[ENOMEM]
+The system does not have enough memory to complete the function.
+.TP 15
+[EEXIST]
+An event counter ID already exists for the key parameter. 
+.TP 15
+[EMFILE]
+An attempt to attach the event count's shared memory region exceeded the maximum
+umber of attached regions allowed for any one process.
+.TP 15
+[ENOSYS]
+The requested operation is not supported by this implementation.
+.TP 15
+[EINTR]
+The function was interrupted by a signal.
+.TP 15
+[EIDRM]
+The event counter was removed from the system.
+.LP
+.B eawait
+can set
+.I errno
+to the following values:
+.TP 15
+[EAGAIN]
+Too many processes are already waiting for an event.
+.TP 15
+[EINTR]
+The function was interrupted by a signal.
+.TP 15
+[ENOSYS]
+The requested operation is not supported by this implementation.
+.TP 15
+[EIDRM]
+The event counter was removed from the system.
+.TP 15
+[ERANGE]
+An overflow of the event counter occured.
+.TP 15
+[ENOSPC]
+The system-defined limit on the number of processes using this call was
+exceeded.
+.LP
+.B eread
+can set
+.I errno
+to the following values:
+.TP 15
+[EINTR]
+The function was interrupted by a signal.
+.TP 15
+[ENOSYS]
+The requested operation is not supported by this implementation.
+.TP 15
+[EIDRM]
+The event counter was removed from the system.
+.TP 15
+[ENOSPC]
+The system-defined limit on the number of processes using this call was
+exceeded.
+.LP
+.B eadvance
+can set
+.I errno
+to the following values:
+.TP 15
+[EINTR]
+The function was interrupted by a signal.
+.TP 15
+[ENOSYS]
+The requested operation is not supported by this implementation.
+.TP 15
+[EIDRM]
+The event counter was removed from the system.
+.TP 15
+[ERANGE]
+An overflow of the event counter occured.
+.TP 15
+[ENOSPC]
+The system-defined limit on the number of processes using this call was
+exceeded.
+.LP
+.B rm_eventcounter
+can set
+.I errno
+to the following values:
+.TP 15
+[EPERM]
+The calling process does not have the required effective user ID.
+.TP 15
+[ENOMEM]
+The system does not have enough memory to complete the function.
+.SH COMPILING
+Compiling has do be done with 
+.I -lseqev
+e.g.
+.LP
+c89 program.c 
+.I -lseqev
+.SH RESTRICTIONS
+.PP
+Since event counters are implemented with semaphores and shared memory,
+they will interfere with semaphores and shared memory of the same key,
+leading to undefined behaviour.  Also, sequencers with the same key
+cannot be used at the same time.
+.LP
+The number of processes, which can do an
+.B eawait
+on the same event counter simultaneously, is limited by
+.I SEMMSL
+(defined in /usr/include/sys/sem.h).  In case additional processes want to
+do an
+.B eawait
+on the specified event counter, -1 will be returned and errno will be set to
+EAGAIN.
+.PP
+Event counters (like semaphores and shared memory) are not deleted when
+the last process that references them terminates. Therefore the last
+process has to call
+.B rm_eventcounter
+before terminating.
+.PP
+In case of unintended termination of the program use
+.I ipcs
+to find the corresponding semaphores and shared memory segments and
+.I ipcrm
+to remove them.
+.SH ENVIRONMENT
+The environment variable DEBUGEVENTCOUNTER may be used to define the
+current debuglevel.  Currently there are two bits used, bit 0 for some
+debugging output in case of encountered errors, bit 1 for causing a core
+dump in case of an error.  If DEBUGEVENTCOUNTER is defined, but contains no
+value the default debuglevel 1 (bit 0 set) is used.  You may use several
+debug levels simultaneously by setting the apropriate bits in the the value
+assigned to DEBUGEVENTCOUNTER.
+.SH SEE ALSO
+Eventcounter(3), sequencer(3), Sequencer(3), ipcs(3), ipcrm(3)
+.SH AUTHORS
+.IP Implementation:
+Guenther Leber (guenther@vmars.tuwien.ac.at)
+.br
+modified by Alexander Vrchoticky (alex@vmars.tuwien.ac.at)
+.IP "Manual page:"
+Peter Holzer (hp@vmars.tuwien.ac.at) and
+.br
+Guenther Leber (guenther@vmars.tuwien.ac.at)
+.br
+modified by Alexander Vrchoticky (alex@vmars.tuwien.ac.at) and
+.br
+Thomas Galla (tom@vmars.tuwien.ac.at)
+.LP
+Many thanks to Peter P. Puschner and Ralph Zainlinger, who tested the
+implementation.
