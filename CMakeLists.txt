@@ -3,6 +3,7 @@ project (libseqev C)
 
 set (LIB_VERSION_MAJOR "4")
 set (LIB_VERSION_MINOR "13")
+set (LIB_VERSION_PATCH "1")
 
 install (FILES "${PROJECT_BINARY_DIR}/libseqev.a" DESTINATION lib)
 install (FILES sequencer.h eventcounter.h seqev.h DESTINATION include)
@@ -23,6 +24,7 @@ set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
    "Semaphor library for OSUE @ TU-WIEN")
 set (CPACK_PACKAGE_VERSION_MAJOR "${LIB_VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${LIB_VERSION_MINOR}")
+set (CPACK_PACKAGE_VERSION_PATCH "${LIB_VERSION_PATCH}")
 
 # DEB specific
 
