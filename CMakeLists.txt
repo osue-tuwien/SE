@@ -17,16 +17,14 @@ ADD_LIBRARY( seqev STATIC
 # build a CPack driven installer package
 # generall:
 include (InstallRequiredSystemLibraries)
-set (CPACK_PACKAGE_NAME "sysprog-libse")
+set (CPACK_PACKAGE_NAME "osue-${CMAKE_PROJECT_NAME}")
 set (CPACK_PACKAGE_CONTACT 
    "OSUE TEAM <osue-team@vmars.tuwien.ac.at>")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY 
-   "Semaphor library for OSUE @ TU-WIEN")
+   "Sequencer/Eventcounter library for OSUE @ TU-WIEN")
 set (CPACK_PACKAGE_VERSION_MAJOR "${LIB_VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${LIB_VERSION_MINOR}")
 set (CPACK_PACKAGE_VERSION_PATCH "${LIB_VERSION_PATCH}")
-
-# DEB specific
 
 # RPM specific
 set (CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
