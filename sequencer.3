@@ -127,8 +127,8 @@ The system does not have enough memory to complete the function.
 .SH COMPILING
 Compiling has to be done with \fI-lseqev\fR e.g.
 .LP
-c89 program.c
-.I -lsequev
+gcc program.c
+.I -lseqev
 .SH RESTRICTIONS
 Since this implementation uses shared memory and semaphores, the existence of
 shared memory or semaphores with the same key leads to undefined behavior.

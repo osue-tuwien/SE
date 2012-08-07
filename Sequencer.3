@@ -48,8 +48,8 @@ On overflow, which occurrs after MAX_LONG \fISticket\fR calls,
 .SH COMPILING
 Compiling has to be done with \fI-lseqev\fR, e.g.
 .LP
-c89 program.c
-.B -lsequev
+gcc program.c
+.B -lseqev
 .SH RESTRICTIONS
 Since this implementation uses shared memory and semaphores, the existence of
 shared memory or semaphores with the same key leads to undefined behavior.
