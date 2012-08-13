@@ -5,6 +5,17 @@ set (LIB_VERSION_MAJOR "4")
 set (LIB_VERSION_MINOR "13")
 set (LIB_VERSION_PATCH "1")
 
+set (COMMON_FLAGS "-std=c99 -Wall -pedantic -D_XOPEN_SOURCE=500")
+if (CMAKE_BUILD_TYPE STREQUAL "debug")
+   set (DEBUG_FLAGS "-O0 -g")
+else()
+   set (CMAKE_BUILD_TYPE "release")
+endif()
+message ("-- Building target: ${CMAKE_BUILD_TYPE}")
+
+set (CMAKE_C_FLAGS_RELEASE "${COMMON_FLAGS}")
+set (CMAKE_C_FLAGS_DEBUG "${COMMON_FLAGS} ${DEBUG_FLAGS}")
+
 install (FILES "${PROJECT_BINARY_DIR}/libseqev.a" DESTINATION lib)
 install (FILES sequencer.h eventcounter.h seqev.h DESTINATION include)
 install (FILES Sequencer.3 sequencer.3 Eventcounter.3 eventcounter.3 DESTINATION share/man/man3)

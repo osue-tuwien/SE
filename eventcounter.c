@@ -1,22 +1,3 @@
-/*******************************************************************************
-*                                                                              *
-*     Author:      G. Leber                                                    *
-*                  Technische Universitaet Wien                                *
-*                  Institut fuer Technische Informatik E182/1                  *
-*                  Treitlstrasse 3                                             *
-*                  1040 Wien                                                   *
-*                  Tel.: (0222) 58801 / 8176                                   *
-*                  E-Mail: guenther@vmars.tuwien.ac.at                         *
-*     File:        eventcounter.c					       *
-*     Version:     4.12							       *
-*     Date:        9/7/94						       *
-*                                                                              *
-*******************************************************************************/
-
-#ifndef lint
-static char	eventcounter_c_sccsID[] = "@(#)eventcounter.c	4.12	9/7/94";
-#endif /* lint */
-
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
@@ -84,7 +65,7 @@ Eventcounter_t	*Eventcounter;
 	semid,
 	shmid,
 	i;
- ushort	semval[SEMMSL];
+ unsigned short	semval[SEMMSL];
  long	*p_awaits,
 	dval;
  char	*evarptr,	/* pointer to the value of a environment variable */
