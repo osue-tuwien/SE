@@ -3,7 +3,7 @@ project (libseqev C)
 
 set (LIB_VERSION_MAJOR "4")
 set (LIB_VERSION_MINOR "13")
-set (LIB_VERSION_PATCH "1")
+set (LIB_VERSION_PATCH "2")
 
 install (FILES "${PROJECT_BINARY_DIR}/libseqev.a" DESTINATION lib)
 install (FILES sequencer.h eventcounter.h seqev.h DESTINATION include)
@@ -12,7 +12,8 @@ install (SCRIPT "${PROJECT_SOURCE_DIR}/lnmanpages.txt")
 
 ADD_LIBRARY( seqev STATIC
    sequencer.c
-   eventcounter.c)
+   eventcounter.c
+   seqev.c)
 
 # build a CPack driven installer package
 # generall:
