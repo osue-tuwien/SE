@@ -3,7 +3,7 @@ project (libseqev C)
 
 set (LIB_VERSION_MAJOR "4")
 set (LIB_VERSION_MINOR "13")
-set (LIB_VERSION_PATCH "1")
+set (LIB_VERSION_PATCH "2")
 
 set (COMMON_FLAGS "-std=c99 -Wall -pedantic -D_XOPEN_SOURCE=500")
 if (CMAKE_BUILD_TYPE STREQUAL "debug")
@@ -23,7 +23,8 @@ install (SCRIPT "${PROJECT_SOURCE_DIR}/lnmanpages.txt")
 
 ADD_LIBRARY( seqev STATIC
    sequencer.c
-   eventcounter.c)
+   eventcounter.c
+   seqev.c)
 
 # build a CPack driven installer package
 # generall:
