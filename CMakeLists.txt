@@ -16,6 +16,8 @@ message ("-- Building target: ${CMAKE_BUILD_TYPE}")
 set (CMAKE_C_FLAGS_RELEASE "${COMMON_FLAGS}")
 set (CMAKE_C_FLAGS_DEBUG "${COMMON_FLAGS} ${DEBUG_FLAGS}")
 
+include_directories (${CMAKE_SOURCE_DIR})
+
 install (FILES "${PROJECT_BINARY_DIR}/libseqev.a" DESTINATION lib)
 install (FILES sequencer.h eventcounter.h seqev.h DESTINATION include)
 install (FILES Sequencer.3 sequencer.3 Eventcounter.3 eventcounter.3 DESTINATION share/man/man3)
