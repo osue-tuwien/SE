@@ -16,6 +16,8 @@ message ("-- Building target: ${CMAKE_BUILD_TYPE}")
 set (CMAKE_C_FLAGS_RELEASE "${COMMON_FLAGS}")
 set (CMAKE_C_FLAGS_DEBUG "${COMMON_FLAGS} ${DEBUG_FLAGS}")
 
+include_directories (${CMAKE_SOURCE_DIR})
+
 install (FILES "${PROJECT_BINARY_DIR}/libseqev.a" DESTINATION lib)
 install (FILES sequencer.h eventcounter.h seqev.h DESTINATION include)
 install (FILES Sequencer.3 sequencer.3 Eventcounter.3 eventcounter.3 DESTINATION share/man/man3)
@@ -25,6 +27,19 @@ ADD_LIBRARY( seqev STATIC
    sequencer.c
    eventcounter.c
    seqev.c)
+
+# enable testing in debug mode
+if (CMAKE_BUILD_TYPE STREQUAL "debug")
+   ENABLE_TESTING()
+   
+   # SE
+   add_test(seqev ${CMAKE_CURRENT_BINARY_DIR}/alternate_seqev)
+   set_tests_properties (seqev
+      PROPERTIES PASS_REGULAR_EXPRESSION "01Xp10p21p12p23p14p25p16p27p18p29" TIMEOUT 5)
+   
+   add_executable(alternate_seqev tests/alternate_seqev.c tests/common.c)
+   target_link_libraries(alternate_seqev seqev)
+endif() # enable testing in debug mode
 
 # build a CPack driven installer package
 # generall:
