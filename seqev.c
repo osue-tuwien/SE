@@ -1,22 +1,3 @@
-/*******************************************************************************
-*                                                                              *
-*     Author:      A. Vrchoticky                                               *
-*                  Technische Universitaet Wien                                *
-*                  Institut fuer Technische Informatik E182/1                  *
-*                  Treitlstrasse 3                                             *
-*                  1040 Wien                                                   *
-*                  Tel.: (0222) 58801 / 8168                                   *
-*                  E-Mail: alex@vmars.tuwien.ac.at                             *
-*     File:        seqev.c						       *
-*     Version:     4.12							       *
-*     Date:        9/7/94						       *
-*                                                                              *
-*******************************************************************************/
-
-#ifndef lint
-static char	seqev_c_sccsID[] = "@(#)seqev.c	4.12	9/7/94";
-#endif /* lint */
-
 #include <stdlib.h>
 #include <stddef.h>
 

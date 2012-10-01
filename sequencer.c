@@ -1,23 +1,3 @@
-/*******************************************************************************
-*                                                                              *
-*     Author:      G. Leber                                                    *
-*                  Technische Universitaet Wien                                *
-*                  Institut fuer Technische Informatik E182/1                  *
-*                  Treitlstrasse 3                                             *
-*                  1040 Wien                                                   *
-*                  Tel.: (0222) 58801 / 8176                                   *
-*                  E-Mail: guenther@vmars.tuwien.ac.at                         *
-*     File:        sequencer.c						       *
-*     Version:     4.12							       *
-*     Date:        9/7/94						       *
-*                                                                              *
-*******************************************************************************/
-
-#ifndef lint
-static char	sequencer_c_sccsID[] = "@(#)sequencer.c	4.12	9/7/94";
-#endif /* lint */
-
-
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
